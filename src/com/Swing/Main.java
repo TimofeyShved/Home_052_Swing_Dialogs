@@ -4,6 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.FileFilter;
 
 public class Main {
 
@@ -70,8 +74,79 @@ public class Main {
             }
         });
 
+        //----------------------------------------------------------- JFileChooser выборка -------------------------------------------------------------------
+
+        JButton jButtonFile = new JButton("Выберете файл");
+        jPanel.add(jButtonFile);
+        // добавляем действие на кнопку
+        jButtonFile.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser jFileChooser = new JFileChooser(); // создаем клас для выборки файла
+                jFileChooser.setCurrentDirectory(new File(".")); // путь папки
+                jFileChooser.setSelectedFile(new File(".")); // выбранный файл
+                jFileChooser.setMultiSelectionEnabled(true); // возможность выбрать несколько
+                // выбор может отображать файлы и папки
+                jFileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+                // есть заготовки jFCh.showOpenDialog(jFrame); или jFCh.showSaveDialog(jFrame);
+
+                // Фильтр для нашего окна
+                /*
+                FileFilter fileFilter = new FileFilter()
+                {
+                    @Override
+                    public boolean accept(File pathname) {
+                        if (pathname.getName().endsWith("gif")){
+                            return true;
+                        }
+                        else {
+                            return false;
+                        }
+                    }
+
+                    @Override
+                    public String toString() {
+                        return super.toString()+"Only gif";
+                    }
+                };
+                //jFileChooser.setFileFilter(fileFilter);
+                */
+
+                //добавляем на наше окно, текстовое поле
+                JTextField jTextField = new JTextField("text", 50);
+                jFileChooser.add(jTextField, BorderLayout.SOUTH);
+
+                // действие при выборе элемента, папки файла
+                jFileChooser.addPropertyChangeListener(new PropertyChangeListener() {
+                    @Override
+                    public void propertyChange(PropertyChangeEvent evt) {
+                        jTextField.setText(evt.getSource().toString()); // выводит значения элемента в текстовое поле
+                    }
+                });
+
+                int i = jFileChooser.showDialog(jPanel, "Save");
+                System.out.println(i);                      // 0 - да / 1 - нет / выбран ли файл?
+
+                File file = jFileChooser.getSelectedFile(); // вытаскиваем файл из выборки
+                System.out.println(file.getName());
+            }
+        });
+
+        //----------------------------------------------------------- ColorDialog Цвет -------------------------------------------------------------------
+
+        JButton jButtonColor = new JButton("Цвет формы");
+        jPanel.add(jButtonColor);
+        // добавляем действие на кнопку
+        jButtonColor.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Color color = JColorChooser.showDialog(jPanel, "заголовок", Color.WHITE);
+                jPanel.setBackground(color);
+            }
+        });
     }
 
+    //----Custom dialog
     static class MyDialog extends JDialog{ // наш класс для общения
         public MyDialog(){
             super(jFrame, "заголовок", true); // передаем настройки
