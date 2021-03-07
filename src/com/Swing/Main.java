@@ -1,6 +1,7 @@
 package com.Swing;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -55,6 +56,29 @@ public class Main {
         });
 
         jPanel.revalidate();
+
+        //----------------------------------------------------------- Custom dialog -------------------------------------------------------------------
+
+        JButton jButtonCustom = new JButton("Custom");
+        jPanel.add(jButtonCustom);
+        // добавляем действие на кнопку
+        jButtonCustom.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MyDialog myDialog = new MyDialog(); // создаем наш класс для диалога
+                myDialog.setVisible(true); // отображаем его
+            }
+        });
+
+    }
+
+    static class MyDialog extends JDialog{ // наш класс для общения
+        public MyDialog(){
+            super(jFrame, "заголовок", true); // передаем настройки
+            add(new JTextField(), BorderLayout.NORTH); // добавляем элементы
+            add(new JButton("click"), BorderLayout.SOUTH);
+            setBounds(850, 400, 200, 100); // и размер
+        }
     }
 
     static JFrame getFrame(){
